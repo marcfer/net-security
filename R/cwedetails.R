@@ -21,7 +21,7 @@ parseXMLtoDF <- function() {
   xpath2 <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']/Description")
   dataFrame2 <- xmlToDataFrame(xpath2)
 
-  dataFrame3 <- merge(x = dataFrame, y = dataFrame2, by = NULL)
+  dataFrame3 <- data.frame(dataFrame, dataFrame2)
 
   #Getting CVEs associated (one column data frame with CVEs Associated)
   xpath3 <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']")
