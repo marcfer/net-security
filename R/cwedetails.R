@@ -26,8 +26,8 @@ parseXMLtoDF <- function() {
   #Getting CVEs associated (one column data frame with CVEs Associated)
   xpath3 <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']")
   dataFrame4 <- as.data.frame(xmlToDataFrame(xpath3)$Observed_Examples)
-  names(dataFrame4) <- c("Associated CVEs")
-
+  names(dataFrame4) <- c("Associated_CVEs")
+  #getCVElistFromText(dataFrame4$Associated_CVEs)
 
 }
 
