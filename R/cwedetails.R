@@ -2,6 +2,9 @@
 # Public Functions
 # ================
 library(XML)
+
+install.packages("jsonlite")
+library(jsonlite)
 #library(gtools) #rbind.data.frame(xpath1[[1]], xpath1[[2]], ...) --- do.call(rbind.data.frame, xpath1)
 #' Function that loads the CWE file into a data frame and returns this data frame
 #'
@@ -32,13 +35,12 @@ parseXMLtoDF <- function() {
   for(i in 1:nrow(dataFrame4)) {
     row <- dataFrame4[i,1]
     # do stuff with row
-    dataFrame4[i,1] <- getCVElistFromText(row)
+    dataFrame4[i,1] <- toJSON(getCVElistFromText(row))
   }
   dataFrame5 <- data.frame(dataFrame3, dataFrame4)
 
   return(dataFrame5)
 }
-
 #' Title
 #'
 #' @param id the ID of the CWE as a number
