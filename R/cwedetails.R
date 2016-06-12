@@ -27,11 +27,16 @@ parseXMLtoDF <- function() {
   xpath3 <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']")
   dataFrame4 <- as.data.frame(xmlToDataFrame(xpath3)$Observed_Examples)
   names(dataFrame4) <- c("Associated_CVEs")
-  #getCVElistFromText(dataFrame4$Associated_CVEs)
+  dataFrame4$Associated_CVEs <- as.character(dataFrame4$Associated_CVEs)
 
-  #cos del for
-  regmatches(string, gregexpr("[A-Z]{3}-[0-9]{4}-[0-9]{3,10}", string))
+  for(i in 1:nrow(dataFrame4)) {
+    row <- dataFrame4[i,1]
+    # do stuff with row
+    dataFrame4[i,1] <- getCVElistFromText(row)
+  }
+  dataFrame5 <- data.frame(dataFrame3, dataFrame4)
 
+  return(dataFrame5)
 }
 
 #' Title
@@ -63,5 +68,9 @@ getCWENameByID <- function(id) {
 #'
 #' @examples getCVElistFromText(CVE-2009-1936chain: library CVE-2005-3335)
 getCVElistFromText <- function(string) {
+  if (is.na(string)) return("NULL")
   return(regmatches(string, gregexpr("[A-Z]{3}-[0-9]{4}-[0-9]{3,10}", string)))
 }
+
+
+
