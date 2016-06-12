@@ -29,6 +29,9 @@ parseXMLtoDF <- function() {
   names(dataFrame4) <- c("Associated_CVEs")
   #getCVElistFromText(dataFrame4$Associated_CVEs)
 
+  #cos del for
+  regmatches(string, gregexpr("[A-Z]{3}-[0-9]{4}-[0-9]{3,10}", string))
+
 }
 
 #' Title
@@ -57,7 +60,6 @@ getCWENameByID <- function(id) {
 #' @param string the text from where the CVEs want to be selected
 #'
 #' @return a list with the CVEs present in the text "string"
-#' @export
 #'
 #' @examples getCVElistFromText(CVE-2009-1936chain: library CVE-2005-3335)
 getCVElistFromText <- function(string) {
