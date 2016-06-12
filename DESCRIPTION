@@ -9,7 +9,8 @@ Depends: R (>= 3.2.2)
 Imports:
   R.utils,
   XML,
-  plyr
+  plyr,
+  jsonlite
 Suggests:
   testthat
 License: NA

@@ -1,10 +1,7 @@
 # ================
 # Public Functions
 # ================
-library(XML)
 
-install.packages("jsonlite")
-library(jsonlite)
 #library(gtools) #rbind.data.frame(xpath1[[1]], xpath1[[2]], ...) --- do.call(rbind.data.frame, xpath1)
 #' Function that loads the CWE file into a data frame and returns this data frame
 #'
@@ -14,28 +11,28 @@ library(jsonlite)
 #' @examples
 
 parseXMLtoDF <- function() {
-  xmlTree <- xmlTreeParse("./data/cwec_v2.9.xml", useInternalNodes = TRUE)
-  rootNode <- xmlRoot(xmlTree) #xmlName(rootNode) = Weakness_Catalog
+  xmlTree <- XML::xmlTreeParse("./data/cwec_v2.9.xml", useInternalNodes = TRUE)
+  rootNode <- XML::xmlRoot(xmlTree) #xmlName(rootNode) = Weakness_Catalog
   weaknessesNode <- rootNode[[3]] #weaknessesNode = Weaknesses
-  xpath <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']", xmlAttrs)
+  xpath <- XML::xpathApply(weaknessesNode, "//Weakness[@ID<'110']", XML::xmlAttrs)
   dataFrame <- do.call(rbind.data.frame, xpath)
   names(dataFrame) <- c("ID", "Name", "Weakness_Abstraction", "Status")
 
-  xpath2 <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']/Description")
-  dataFrame2 <- xmlToDataFrame(xpath2)
+  xpath2 <- XML::xpathApply(weaknessesNode, "//Weakness[@ID<'110']/Description")
+  dataFrame2 <- XML::xmlToDataFrame(xpath2)
 
   dataFrame3 <- data.frame(dataFrame, dataFrame2)
 
   #Getting CVEs associated (one column data frame with CVEs Associated)
-  xpath3 <- xpathApply(weaknessesNode, "//Weakness[@ID<'110']")
-  dataFrame4 <- as.data.frame(xmlToDataFrame(xpath3)$Observed_Examples)
+  xpath3 <- XML::xpathApply(weaknessesNode, "//Weakness[@ID<'110']")
+  dataFrame4 <- as.data.frame(XML::xmlToDataFrame(xpath3)$Observed_Examples)
   names(dataFrame4) <- c("Associated_CVEs")
   dataFrame4$Associated_CVEs <- as.character(dataFrame4$Associated_CVEs)
 
-  for(i in 1:nrow(dataFrame4)) {
+  for (i in 1:nrow(dataFrame4)) {
     row <- dataFrame4[i,1]
     # do stuff with row
-    dataFrame4[i,1] <- toJSON(getCVElistFromText(row))
+    dataFrame4[i,1] <- jsonlite::toJSON(getCVElistFromText(row))
   }
   dataFrame5 <- data.frame(dataFrame3, dataFrame4)
 
@@ -51,7 +48,7 @@ parseXMLtoDF <- function() {
 #' @examples getCWENameByID(94) getCWENameByID(102)
 getCWENameByID <- function(id) {
   cweDF <- parseXMLtoDF()
-  cweDF <- subset(cweDF, ID==id)
+  cweDF <- subset(cweDF, ID == id)
   res <- as.character(df$Name)
   return(res)
 }
